@@ -1,3 +1,4 @@
+using System;
 using FoodDelivery_Backend.Context;
 using FoodDelivery_Backend.Services;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +11,8 @@ using Microsoft.OpenApi.Models;
 
 namespace FoodDelivery_Backend {
     public class Startup {
+
+        private readonly string _MyCors = "";
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
         }
@@ -31,6 +34,13 @@ namespace FoodDelivery_Backend {
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FoodDelivery_Backend", Version = "v1" });
             });
+
+            services.AddCors(opt => {
+                opt.AddPolicy(name: _MyCors, builder => {
+                    builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                    .AllowAnyMethod().AllowAnyHeader();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,11 +55,14 @@ namespace FoodDelivery_Backend {
 
             app.UseRouting();
 
+            app.UseCors(_MyCors);
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
             });
+
         }
     }
 }
