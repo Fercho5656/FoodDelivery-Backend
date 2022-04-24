@@ -1,12 +1,16 @@
 using System;
+using System.Text;
 using FoodDelivery_Backend.Context;
 using FoodDelivery_Backend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace FoodDelivery_Backend {
@@ -25,9 +29,23 @@ namespace FoodDelivery_Backend {
             services.AddDbContext<AppDbContext>(opt =>
             opt.UseSqlite(Configuration.GetConnectionString("dev")));
 
+            // Auth
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt => {
+                opt.TokenValidationParameters = new TokenValidationParameters {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["JWT:Issuer"],
+                    ValidAudience = Configuration["JWT:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:SecretKey"]))
+                };
+            });
+
             // Services
             services.AddScoped<IRolesService, RolesService>();
             services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             services.AddControllers();
             services.AddAutoMapper(typeof(Startup));
@@ -61,6 +79,14 @@ namespace FoodDelivery_Backend {
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
+            });
+
+            app.Use(async (context, next) => {
+                var token = context.Session.GetString("Token");
+                if (token != null) {
+                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+                }
+                await next();
             });
 
         }
