@@ -456,3 +456,5 @@ $RECYCLE.BIN/
 Migrations/
 *.db
 appsettings.json
+FoodDelivery.db-shm
+FoodDelivery.db-wal
