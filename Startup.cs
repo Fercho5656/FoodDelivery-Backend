@@ -51,6 +51,25 @@ namespace FoodDelivery_Backend {
             services.AddAutoMapper(typeof(Startup));
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FoodDelivery_Backend", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme."
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                    {
+                        new OpenApiSecurityScheme {
+                            Reference = new OpenApiReference {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                    new string[]{}
+                    }
+                });
             });
 
             services.AddCors(opt => {
@@ -81,13 +100,13 @@ namespace FoodDelivery_Backend {
                 endpoints.MapControllers();
             });
 
-            app.Use(async (context, next) => {
+            /* app.Use(async (context, next) => {
                 var token = context.Session.GetString("Token");
                 if (token != null) {
                     context.Request.Headers.Add("Authorization", "Bearer " + token);
                 }
                 await next();
-            });
+            }); */
 
         }
     }
