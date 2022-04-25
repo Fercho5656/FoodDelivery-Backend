@@ -5,6 +5,8 @@ using FoodDelivery_Backend.Models.Base;
 using FoodDelivery_Backend.Models.Save;
 using FoodDelivery_Backend.Models.ViewModel;
 using FoodDelivery_Backend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDelivery_Backend.Controllers {
@@ -18,6 +20,7 @@ namespace FoodDelivery_Backend.Controllers {
             _mapper = mapper;
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public async Task<IActionResult> GetAll() {
             var users = await _service.GetAll(u => u.Role);
