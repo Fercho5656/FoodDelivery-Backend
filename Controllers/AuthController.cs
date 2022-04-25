@@ -27,8 +27,8 @@ namespace FoodDelivery_Backend.Controllers {
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel) {
             var user = await _service.GetByEmail(loginModel.Email);
-            if (user == null) return Unauthorized();
-            if (!BCrypt.Net.BCrypt.Verify(loginModel.Password, user.Password)) return Unauthorized();
+            if (user == null) return Unauthorized(new { message = "Invalid email or password" });
+            if (!BCrypt.Net.BCrypt.Verify(loginModel.Password, user.Password)) return Unauthorized(new { message = "Invalid email or password" });
             var vmUser = _mapper.Map<VMUser>(user);
             var token = _tokenService.BuildToken(_config["JWT:SecretKey"].ToString(), _config["JWT:ValidIssuer"].ToString(), vmUser);
             return Ok(new { token });
