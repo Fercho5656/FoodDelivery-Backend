@@ -1,3 +1,4 @@
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using FoodDelivery_Backend.Models.Auth;
@@ -5,6 +6,8 @@ using FoodDelivery_Backend.Models.Base;
 using FoodDelivery_Backend.Models.Save;
 using FoodDelivery_Backend.Models.ViewModel;
 using FoodDelivery_Backend.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -43,6 +46,12 @@ namespace FoodDelivery_Backend.Controllers {
             await _service.Add(user);
             var vmUser = _mapper.Map<VMUser>(user);
             return CreatedAtAction(nameof(Register), new { id = vmUser.Id }, vmUser);
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("check")]
+        public async Task<IActionResult> Check() {
+            return Ok();
         }
     }
 }
