@@ -51,7 +51,8 @@ namespace FoodDelivery_Backend.Controllers {
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("check")]
         public async Task<IActionResult> Check() {
-            return Ok();
+            var value = new { message = "Authorized" };
+            return Ok(value);
         }
     }
 }
