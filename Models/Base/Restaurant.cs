@@ -11,12 +11,9 @@ namespace FoodDelivery_Backend.Models.Base {
         public DateTime CreatedAt { get; set; }
 
         // Navigation properties
-        public CategoryRestaurant CategoryRestaurant { get; set; }
         public int CategoryRestaurantId { get; set; }
-
+        public CategoryRestaurant CategoryRestaurant { get; set; }
         public List<Order> Orders { get; set; }
-        
-        
 
     }
 }
