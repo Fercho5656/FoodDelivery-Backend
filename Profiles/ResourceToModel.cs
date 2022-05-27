@@ -7,6 +7,10 @@ namespace FoodDelivery_Backend.Profiles {
         public ResourceToModel() {
             CreateMap<SaveRole, Role>();
             CreateMap<SaveUser, User>();
+            CreateMap<SaveFood, Food>();
+            CreateMap<SaveCategoryFood, CategoryFood>();
+            CreateMap<SaveRestaurant, Restaurant>();
+            CreateMap<SaveCategoryRestaurant, CategoryRestaurant>();
         }
     }
 }
