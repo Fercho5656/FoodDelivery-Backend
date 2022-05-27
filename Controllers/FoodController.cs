@@ -38,7 +38,9 @@ namespace FoodDelivery_Backend.Controllers {
         public async Task<IActionResult> Add([FromBody] SaveFood saveFood) {
             var food = _mapper.Map<Food>(saveFood);
             await _service.Add(food);
-            return CreatedAtAction(nameof(Add), new { id = food.Id }, food);
+            var newFood = await _service.Get(food.Id, food => food.CategoryFood);
+            var vmFood = _mapper.Map<VMFood>(newFood);
+            return CreatedAtAction(nameof(Add), new { id = food.Id }, vmFood);
         }
 
         [HttpPut("{id}")]
