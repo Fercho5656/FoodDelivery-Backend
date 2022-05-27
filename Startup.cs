@@ -46,6 +46,8 @@ namespace FoodDelivery_Backend {
             services.AddScoped<IRolesService, RolesService>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ICategoryFoodService, CategoryFoodService>();
+            services.AddScoped<IFoodService, FoodService>();
 
             services.AddControllers();
             services.AddAutoMapper(typeof(Startup));
