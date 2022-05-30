@@ -49,6 +49,7 @@ namespace FoodDelivery_Backend {
             services.AddScoped<ICategoryFoodService, CategoryFoodService>();
             services.AddScoped<IFoodService, FoodService>();
             services.AddScoped<ICategoryRestaurantService, CategoryRestaurantService>();
+            services.AddScoped<IRestaurantService, RestaurantService>();
 
             services.AddControllers();
             services.AddAutoMapper(typeof(Startup));
@@ -77,7 +78,7 @@ namespace FoodDelivery_Backend {
 
             services.AddCors(opt => {
                 opt.AddPolicy(name: _MyCors, builder => {
-                    builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+                    builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "capable-cascaron-84c8f9.netlify.app/")
                     .AllowAnyMethod().AllowAnyHeader();
                 });
             });
